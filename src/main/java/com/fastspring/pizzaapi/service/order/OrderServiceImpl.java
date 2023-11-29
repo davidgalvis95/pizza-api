@@ -6,6 +6,7 @@ import com.fastspring.pizzaapi.dto.order.PizzaOrderRequest;
 import com.fastspring.pizzaapi.dto.order.ProductOrderDto;
 import com.fastspring.pizzaapi.dto.product.*;
 import com.fastspring.pizzaapi.model.Product;
+import com.fastspring.pizzaapi.model.enums.PizzaSize;
 import com.fastspring.pizzaapi.model.enums.ProductType;
 import com.fastspring.pizzaapi.service.inventory.InventoryService;
 import com.fastspring.pizzaapi.service.prevalidation.AdditionValidationService;
@@ -113,6 +114,7 @@ public class OrderServiceImpl implements OrderService {
                                 .name(productService.getProductName(products, p))
                                 .build())
                         .toList())
+                .size(pizzaOrderRequest.getPizzaSize())
                 .build();
     }
 
@@ -123,11 +125,23 @@ public class OrderServiceImpl implements OrderService {
                 currentProducts.putIfAbsent(product.getId(), product);
                 currentProducts.computeIfPresent(product.getId(), (key, value) -> {
                     final Integer newQ = value.getQuantity() + product.getQuantity();
+                    final Integer newRealQ = value.getQuantity() +
+                            calculateQuantityBasedOnPizzaSize(pizzaOrderRequest.getPizzaSize(), product.getQuantity());
                     value.setQuantity(newQ);
+                    value.setRealQuantity(newRealQ);
                     return value;
                 });
             }
         }
         return currentProducts.values().stream().toList();
+    }
+
+    private Integer calculateQuantityBasedOnPizzaSize(final PizzaSize pizzaSize, final Integer baseQ) {
+        return switch (pizzaSize) {
+            case SMALL, NOT_APPLICABLE -> baseQ;
+            case MEDIUM -> baseQ * 2;
+            case BIG -> baseQ * 3;
+            default -> throw new IllegalStateException("Unexpected value for pizza size: " + pizzaSize);
+        };
     }
 }

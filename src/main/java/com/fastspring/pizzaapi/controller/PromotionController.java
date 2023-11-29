@@ -11,7 +11,7 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api/v1/promotion")
 public class PromotionController {
 
     private final PromotionManagementService promotionManagementService;
@@ -21,7 +21,7 @@ public class PromotionController {
     }
 
 
-    @PutMapping
+    @PutMapping("/deactivate")
     public Mono<ResponseEntity<StandardResponse<Promotion>>> deactivatePromotion(@RequestParam UUID promotionCode) {
         return promotionManagementService.deactivatePromotion(promotionCode)
                 .map(response -> ResponseEntity.status(HttpStatus.OK)
@@ -32,7 +32,7 @@ public class PromotionController {
                         ));
     }
 
-    @PutMapping
+    @PutMapping("/activate")
     public Mono<ResponseEntity<StandardResponse<Promotion>>> activatePromotion(@RequestParam UUID promotionCode) {
         return promotionManagementService.activatePromotion(promotionCode)
                 .map(response -> ResponseEntity.status(HttpStatus.OK)

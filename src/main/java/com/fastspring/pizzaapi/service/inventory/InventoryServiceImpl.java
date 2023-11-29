@@ -84,7 +84,7 @@ public class InventoryServiceImpl implements InventoryService{
                 .findFirst()
                 .map(productDto -> {
                     int newAvailableQuantity = inventory.getAvailableQuantity() +
-                            (isRefill ? productDto.getQuantity() : -productDto.getQuantity());
+                            (isRefill ? productDto.getQuantity() : -productDto.getRealQuantity());
                     inventory.setAvailableQuantity(newAvailableQuantity);
                     return inventoryRepository.save(inventory);
                 })
@@ -96,7 +96,7 @@ public class InventoryServiceImpl implements InventoryService{
             final Inventory currentInventoryForProduct = inventories.stream()
                     .filter(i -> i.getProductId().equals(product.getId())).findFirst()
                     .orElseThrow(() -> new RuntimeException("Product " + product.getId() + " is not present in inventory"));
-            final int requestedQuantity = product.getQuantity();
+            final int requestedQuantity = product.getRealQuantity();
             if (currentInventoryForProduct.getAvailableQuantity() < requestedQuantity) {
                 throw new RuntimeException("Insufficient inventory for product: " + product.getId());
             }

@@ -58,7 +58,7 @@ public class PriceServiceImpl implements PriceService {
                 .map(Price::getValue)
                 .reduce(0, Integer::sum);
 
-        final Mono<Integer> pizzaBasePrice = priceRepository.findPriceByProductIdAndPizzaSize(pizza.getBase().getId(), pizza.getSize())
+        final Mono<Integer> pizzaBasePrice = priceRepository.findPriceByProductId(pizza.getBase().getId())
                 .map(Price::getValue);
         final Mono<Integer> cheesePrice = priceRepository.findPriceByProductIdAndPizzaSize(pizza.getCheese().getId(), pizza.getSize())
                 .map(Price::getValue);

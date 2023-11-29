@@ -12,7 +12,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductOrderDto {
+public class ProductProcessOrderDto {
     private UUID id;
     private Integer quantity;
     private Integer realQuantity;
