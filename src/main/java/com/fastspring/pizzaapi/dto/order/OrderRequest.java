@@ -1,5 +1,8 @@
 package com.fastspring.pizzaapi.dto.order;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
@@ -11,6 +14,10 @@ import java.util.UUID;
 @Value
 @AllArgsConstructor
 public class OrderRequest {
-    List<PizzaOrderRequest> pizzaRequests;
+
+    @NotEmpty
+    @NotNull
+    List<@Valid PizzaOrderRequest> pizzaRequests;
+
     UUID promoCode;
 }

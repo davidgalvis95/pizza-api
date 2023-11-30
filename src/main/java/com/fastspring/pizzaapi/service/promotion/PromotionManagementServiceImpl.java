@@ -21,6 +21,7 @@ public class PromotionManagementServiceImpl implements PromotionManagementServic
         return getPromotionById(promotionCode)
                 .flatMap(currentPromotion -> {
                     currentPromotion.setActive(true);
+                    currentPromotion.setNewRecord(false);
                     return promotionRepository.save(currentPromotion);
                 });
     }
@@ -30,6 +31,7 @@ public class PromotionManagementServiceImpl implements PromotionManagementServic
         return getPromotionById(promotionCode)
                 .flatMap(currentPromotion -> {
                     currentPromotion.setActive(false);
+                    currentPromotion.setNewRecord(false);
                     return promotionRepository.save(currentPromotion);
                 });
     }

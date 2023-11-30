@@ -5,6 +5,7 @@ import com.fastspring.pizzaapi.model.Inventory;
 import com.fastspring.pizzaapi.repository.InventoryRepository;
 import com.fastspring.pizzaapi.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -51,6 +52,7 @@ public class InventoryServiceImpl implements InventoryService{
     }
 
     @Override
+    @Transactional
     public Flux<Inventory> updateProductsInventory(final List<ProductOrderDto> products, final boolean isRefill) {
 
         final Flux<Inventory> inventories =  inventoryRepository.findInventoryByProductIdIn(
@@ -80,12 +82,13 @@ public class InventoryServiceImpl implements InventoryService{
 
     private Mono<Inventory> updateInventory(List<ProductOrderDto> products, Inventory inventory, final boolean isRefill) {
         return products.stream()
-                .filter(p -> p.getId().equals(inventory.getId()))
+                .filter(p -> p.getId().equals(inventory.getProductId()))
                 .findFirst()
                 .map(productDto -> {
                     int newAvailableQuantity = inventory.getAvailableQuantity() +
                             (isRefill ? productDto.getQuantity() : -productDto.getRealQuantity());
                     inventory.setAvailableQuantity(newAvailableQuantity);
+                    inventory.setNewRecord(false);
                     return inventoryRepository.save(inventory);
                 })
                 .orElseThrow(() -> new IllegalArgumentException("No product provided that matches the product id: " + inventory.getProductId() + " in inventory"));

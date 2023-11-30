@@ -4,6 +4,7 @@ import com.fastspring.pizzaapi.dto.product.Pizza;
 import lombok.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Builder(toBuilder = true)
 @Data
@@ -13,5 +14,6 @@ public class OrderResponse {
     private List<Pizza> pizzas;
     private Integer priceWithoutPromotion;
     private Integer priceWithPromotion;
-    private String promoCode;
+    private UUID promoCode;
+    private String promoCodeDescription;
 }

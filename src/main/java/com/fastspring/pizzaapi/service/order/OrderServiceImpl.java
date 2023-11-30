@@ -15,11 +15,13 @@ import com.fastspring.pizzaapi.service.prevalidation.OrderPreValidationService;
 import com.fastspring.pizzaapi.service.price.PriceService;
 import com.fastspring.pizzaapi.service.product.ProductService;
 import com.fastspring.pizzaapi.service.promotion.PromotionService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.util.*;
 
+@Slf4j
 @Service
 public class OrderServiceImpl implements OrderService {
 
@@ -50,9 +52,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public Mono<OrderResponse> processOrder(final OrderRequest orderRequest) {
-        final List<ProductOrderDto> products = transformPizzaRequestsIntoListOfProducts(orderRequest.getPizzaRequests());
+        final List<ProductOrderDto> products = pizzaRequestsToListOfAggregatedProducts(orderRequest.getPizzaRequests());
 
-        return preValidateOrderRequest(products)
+        return preValidatePizzaRequests(orderRequest.getPizzaRequests())
                 .then(productService.checkForProductExistence(products))
                 .then(inventoryService.checkForProductsInventory(products))
                 .then(productService.getAllProductsMatchingIds(products)
@@ -61,16 +63,26 @@ public class OrderServiceImpl implements OrderService {
                 .flatMap(priceService::calculatePrice)
                 .flatMap(order -> promotionService.applyPromotionAndRecalculatePrice(order, orderRequest.getPromoCode(), Optional.empty())
                         .map(OrderResponse.OrderResponseBuilder::build))
-                .doOnNext(order -> inventoryService.updateProductsInventory(products, false));
+                .flatMap(order -> inventoryService.updateProductsInventory(products, false)
+                        .collectList()
+                        .map(response -> order));
     }
 
-    private Mono<Void> preValidateOrderRequest(List<ProductOrderDto> products) {
+    private Mono<Void> preValidatePizzaRequests(final List<PizzaOrderRequest> pizzaOrderRequests) {
+        final List<Mono<Void>> orderValidations = pizzaOrderRequests.stream()
+                .map(pizzaReq -> preValidateOrderRequest(pizzaReq.getProducts()))
+                .toList();
+
+        return Mono.when(orderValidations);
+    }
+
+    private Mono<Void> preValidateOrderRequest(final List<ProductOrderDto> products) {
         final boolean additionsValid = validationServices.get(ProductType.ADDITION).validateProducts(products, ProductType.ADDITION);
-        final boolean baseIsValid = validationServices.get(ProductType.ADDITION).validateProducts(products, ProductType.BASE);
-        final boolean cheeseIsValid = validationServices.get(ProductType.ADDITION).validateProducts(products, ProductType.CHEESE);
+        final boolean baseIsValid = validationServices.get(ProductType.BASE).validateProducts(products, ProductType.BASE);
+        final boolean cheeseIsValid = validationServices.get(ProductType.CHEESE).validateProducts(products, ProductType.CHEESE);
 
         if (!additionsValid || !baseIsValid || !cheeseIsValid) {
-            return Mono.error(new IllegalArgumentException("Invalid request: Cannot send more than one addition with same id and its maximum amount is 3, " +
+            return Mono.error(new IllegalArgumentException("Invalid pizza request: Cannot send more than one addition with same id, its minimum amount is 1 maximum amount is 3, " +
                     "for base and cheese amount allowed is only 1, and can ask only for one of its type"));
         }
         return Mono.empty();
@@ -79,17 +91,18 @@ public class OrderServiceImpl implements OrderService {
     private OrderResponse.OrderResponseBuilder initializeOrderResponse(final OrderRequest orderRequest,
                                                                        final List<Product> productsList) {
         return OrderResponse.builder()
-                .pizzas(transformPizzaRequestsIntoListOfPizzas(orderRequest.getPizzaRequests(), productsList));
+                .pizzas(pizzaRequestsIntoListOfPizzas(orderRequest.getPizzaRequests(), productsList));
     }
 
 
-    private List<Pizza> transformPizzaRequestsIntoListOfPizzas(List<PizzaOrderRequest> pizzaOrderRequests, List<Product> products) {
+    private List<Pizza> pizzaRequestsIntoListOfPizzas(final List<PizzaOrderRequest> pizzaOrderRequests,
+                                                      final List<Product> products) {
         return pizzaOrderRequests.stream()
-                .map(pizzaOrderRequest -> transformPizzaRequestIntoPizza(pizzaOrderRequest, products))
+                .map(pizzaOrderRequest -> pizzaRequestIntoPizza(pizzaOrderRequest, products))
                 .toList();
     }
 
-    private Pizza transformPizzaRequestIntoPizza(PizzaOrderRequest pizzaOrderRequest, List<Product> products) {
+    private Pizza pizzaRequestIntoPizza(final PizzaOrderRequest pizzaOrderRequest, final List<Product> products) {
         return Pizza.builder()
                 .base(pizzaOrderRequest.getProducts().stream()
                         .filter(p -> p.getProductType().equals(ProductType.BASE))
@@ -111,6 +124,7 @@ public class OrderServiceImpl implements OrderService {
                         .filter(p -> p.getProductType().equals(ProductType.ADDITION))
                         .map(p -> Addition.builder()
                                 .id(p.getId())
+                                .amount(p.getQuantity())
                                 .name(productService.getProductName(products, p))
                                 .build())
                         .toList())
@@ -118,25 +132,41 @@ public class OrderServiceImpl implements OrderService {
                 .build();
     }
 
-    private List<ProductOrderDto> transformPizzaRequestsIntoListOfProducts(List<PizzaOrderRequest> pizzaOrderRequests) {
+    private List<ProductOrderDto> pizzaRequestsToListOfAggregatedProducts(List<PizzaOrderRequest> pizzaOrderRequests) {
         final Map<UUID, ProductOrderDto> currentProducts = new HashMap<>();
         for (PizzaOrderRequest pizzaOrderRequest : pizzaOrderRequests) {
             for (ProductOrderDto product : pizzaOrderRequest.getProducts()) {
-                currentProducts.putIfAbsent(product.getId(), product);
                 currentProducts.computeIfPresent(product.getId(), (key, value) -> {
                     final Integer newQ = value.getQuantity() + product.getQuantity();
-                    final Integer newRealQ = value.getQuantity() +
-                            calculateQuantityBasedOnPizzaSize(pizzaOrderRequest.getPizzaSize(), product.getQuantity());
-                    value.setQuantity(newQ);
-                    value.setRealQuantity(newRealQ);
-                    return value;
+                    final Integer newRealQ =
+                            calculateQuantityBasedOnPizzaSize(pizzaOrderRequest.getPizzaSize(), newQ, product.getProductType());
+                    return ProductOrderDto.builder()
+                            .id(value.getId())
+                            .productType(value.getProductType())
+                            .quantity(newQ)
+                            .realQuantity(newRealQ)
+                            .build();
+                });
+                currentProducts.computeIfAbsent(product.getId(), (key) -> {
+                    final Integer newRealQ =
+                            calculateQuantityBasedOnPizzaSize(pizzaOrderRequest.getPizzaSize(), product.getQuantity(), product.getProductType());
+                    return ProductOrderDto.builder()
+                            .id(key)
+                            .productType(product.getProductType())
+                            .quantity(product.getQuantity())
+                            .realQuantity(newRealQ)
+                            .build();
                 });
             }
         }
         return currentProducts.values().stream().toList();
     }
 
-    private Integer calculateQuantityBasedOnPizzaSize(final PizzaSize pizzaSize, final Integer baseQ) {
+    private Integer calculateQuantityBasedOnPizzaSize(PizzaSize pizzaSize, final Integer baseQ, final ProductType productType) {
+        if(productType.equals(ProductType.BASE)) {
+            pizzaSize = PizzaSize.NOT_APPLICABLE;
+        }
+
         return switch (pizzaSize) {
             case SMALL, NOT_APPLICABLE -> baseQ;
             case MEDIUM -> baseQ * 2;

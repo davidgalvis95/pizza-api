@@ -1,6 +1,9 @@
 package com.fastspring.pizzaapi.dto.inventory;
 
 import com.fastspring.pizzaapi.dto.order.ProductOrderDto;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,5 +16,8 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 public class InventoryRequest {
-    private List<ProductOrderDto> products;
+
+    @NotNull
+    @NotEmpty
+    private List<@Valid ProductOrderDto> products;
 }

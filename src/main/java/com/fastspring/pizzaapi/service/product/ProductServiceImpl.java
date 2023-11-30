@@ -11,6 +11,7 @@ import com.fastspring.pizzaapi.repository.InventoryRepository;
 import com.fastspring.pizzaapi.repository.PriceRepository;
 import com.fastspring.pizzaapi.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -64,15 +65,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public Mono<ProductResponseDto> addNewProduct(final ProductDto productDto) {
 
         final UUID newProductId = UUID.randomUUID();
         final UUID newInventoryId = UUID.randomUUID();
-        final UUID newPriceId = UUID.randomUUID();
 
         return saveProductAndReturn(productDto, newProductId)
                 .flatMap(product -> saveInventoryForProductAndReturnBuilder(productDto, newProductId, newInventoryId, product))
-                .flatMap(productResponse -> savePriceAndReturnResponse(productDto, newProductId, newPriceId, productResponse));
+                .flatMap(productResponse -> savePriceAndReturnResponse(productDto, newProductId, productResponse));
     }
 
     @Override
@@ -88,19 +89,18 @@ public class ProductServiceImpl implements ProductService {
                         .productId(newProductId)
                         .name(productDto.getProductName())
                         .type(productDto.getType())
+                        .newRecord(true)
                         .build());
     }
 
     private Mono<ProductResponseDto> savePriceAndReturnResponse(
             final ProductDto productDto,
             final UUID newProductId,
-            final UUID newPriceId,
             final ProductResponseDto.ProductResponseDtoBuilder productResponse
     ) {
         return priceRepository.saveAll(mapPricesBySizeToPrices(
                         productDto.getPriceBySize(),
-                        newProductId,
-                        newPriceId
+                        newProductId
                 ))
                 .collectList()
                 .map(prices -> productResponse
@@ -120,6 +120,7 @@ public class ProductServiceImpl implements ProductService {
                                 .id(newInventoryId)
                                 .productId(newProductId)
                                 .availableQuantity(productDto.getInitialInventory())
+                                .newRecord(true)
                                 .build())
                 .map(inventory -> ProductResponseDto.builder()
                         .id(newProductId)
@@ -128,13 +129,15 @@ public class ProductServiceImpl implements ProductService {
                         .initialInventory(inventory.getAvailableQuantity()));
     }
 
-    private List<Price> mapPricesBySizeToPrices(final Map<PizzaSize, Integer> pricesBySize, UUID productId, UUID priceId) {
+    private List<Price> mapPricesBySizeToPrices(final Map<PizzaSize, Integer> pricesBySize, final UUID productId) {
+
         return pricesBySize.entrySet().stream()
                 .map(prices -> Price.builder()
-                        .id(priceId)
+                        .id(UUID.randomUUID())
                         .productId(productId)
                         .value(prices.getValue())
                         .pizzaSize(prices.getKey())
+                        .newRecord(true)
                         .build())
                 .toList();
     }

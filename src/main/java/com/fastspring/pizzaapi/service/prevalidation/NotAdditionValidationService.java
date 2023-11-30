@@ -16,7 +16,7 @@ public class NotAdditionValidationService extends OrderPreValidationService {
             if(productsByType.size() != 1){
                 return false;
             }else {
-                return productsByType.get(0).getQuantity() <= 1;
+                return productsByType.get(0).getQuantity() == 1;
             }
         }
     }

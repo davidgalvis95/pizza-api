@@ -5,14 +5,15 @@ import com.fastspring.pizzaapi.dto.order.OrderResponse;
 import com.fastspring.pizzaapi.dto.product.Pizza;
 import com.fastspring.pizzaapi.model.Price;
 import com.fastspring.pizzaapi.repository.PriceRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class PriceServiceImpl implements PriceService {
 
@@ -50,20 +51,29 @@ public class PriceServiceImpl implements PriceService {
 
     private Mono<Pizza> calculatePizzaUnitPrice(final Pizza pizza) {
 
+        final Map<UUID, Integer> additionQuantityMap = new HashMap<>();
         final List<UUID> additionsIds = pizza.getAdditions().stream()
-                .map(Addition::getId)
+                .map(addition -> {
+                    additionQuantityMap.put(addition.getId(), addition.getAmount());
+                    return addition.getId();
+                })
                 .toList();
 
         final Mono<Integer> additionsPrice = priceRepository.findPriceByProductIdsAndPizzaSize(additionsIds, pizza.getSize())
-                .map(Price::getValue)
-                .reduce(0, Integer::sum);
+                .map(price -> price.getValue() * additionQuantityMap.get(price.getProductId()))
+                .reduce(0, Integer::sum)
+                .doOnNext(res -> log.info("Additions price total: " + res));
 
         final Mono<Integer> pizzaBasePrice = priceRepository.findPriceByProductId(pizza.getBase().getId())
-                .map(Price::getValue);
+                .map(Price::getValue)
+                .doOnNext(res -> log.info("Base price total: " + res));
         final Mono<Integer> cheesePrice = priceRepository.findPriceByProductIdAndPizzaSize(pizza.getCheese().getId(), pizza.getSize())
-                .map(Price::getValue);
+                .map(Price::getValue)
+                .doOnNext(res -> log.info("Cheese price total: " + res));
 
-        return Flux.concat(additionsPrice, pizzaBasePrice, cheesePrice).reduce(9, Integer::sum)
+
+        return Flux.concat(additionsPrice, pizzaBasePrice, cheesePrice)
+                .reduce(0, Integer::sum)
                 .map(totalPrice -> {
                     pizza.setUnitPrice(totalPrice);
                     return pizza;

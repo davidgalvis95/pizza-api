@@ -41,7 +41,7 @@ public class PromotionServiceProxy implements PromotionService {
                     if (promoCodeInfo.getActive()) {
                         return Mono.just(Map.of(promoCodeInfo, matchServiceByCodeDescription(promoCodeInfo.getDescriptiveCode(), promoCode)));
                     }
-                    return Mono.error(new IllegalArgumentException("Current promo code " + promoCode + "is expired"));
+                    return Mono.error(new IllegalArgumentException("Current promo code " + promoCode + " is expired"));
                 });
     }
 

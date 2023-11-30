@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/api/v1/order/process")
+@RequestMapping("/api/v1/order")
 public class OrderController {
 
     private final OrderService orderService;
@@ -21,7 +21,7 @@ public class OrderController {
     }
 
 
-    @PostMapping
+    @PostMapping("/place")
     public Mono<ResponseEntity<StandardResponse<OrderResponse>>> processOrderRequest(@RequestBody OrderRequest orderRequest) {
         return orderService.processOrder(orderRequest)
                 .map(response -> ResponseEntity.status(HttpStatus.OK)

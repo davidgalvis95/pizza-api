@@ -17,9 +17,10 @@ public class PercentOffPromotionService implements PromotionService {
     public Mono<OrderResponse.OrderResponseBuilder> applyPromotionAndRecalculatePrice(
             final OrderResponse.OrderResponseBuilder orderResponseBuilder,
             final UUID promoCode,
-            final Optional<Promotion> promotion) {
-        if (promotion.isPresent()) {
-            final String descriptiveCode = promotion.get().getDescriptiveCode().name();
+            final Optional<Promotion> promotionOptional) {
+        if (promotionOptional.isPresent()) {
+            final Promotion promotion = promotionOptional.get();
+            final String descriptiveCode = promotion.getDescriptiveCode().name();
             final Pattern pattern = Pattern.compile("\\d+");
             final Matcher matcher = pattern.matcher(descriptiveCode);
 
@@ -29,6 +30,8 @@ public class PercentOffPromotionService implements PromotionService {
                 final int priceWithoutPromotion = orderResponseBuilder.build().getPriceWithoutPromotion();
                 final int priceWithPromotion = priceWithoutPromotion - (priceWithoutPromotion * percentOff/100);
                 orderResponseBuilder.priceWithPromotion(priceWithPromotion);
+                orderResponseBuilder.promoCode(promoCode);
+                orderResponseBuilder.promoCodeDescription(promotion.getDescription());
             }
         }
         return Mono.just(orderResponseBuilder);

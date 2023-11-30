@@ -6,6 +6,7 @@ import com.fastspring.pizzaapi.model.enums.ProductType;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 public class AdditionValidationService extends OrderPreValidationService {
 
@@ -15,12 +16,13 @@ public class AdditionValidationService extends OrderPreValidationService {
         if(!super.validateProducts(additions, productType)) {
             return false;
         }
-        final Set<ProductOrderDto> uniqueAdditions = new HashSet<>(additions);
-        if(additions.size() != uniqueAdditions.size()){
+        final List<UUID> additionIds = additions.stream().map(ProductOrderDto::getId).toList();
+        final Set<UUID> uniqueAdditionsIds = new HashSet<>(additionIds);
+        if(additionIds.size() != uniqueAdditionsIds.size()){
             return false;
         }else {
             for (ProductOrderDto addition: additions) {
-                if(addition.getQuantity() > 3) {
+                if(addition.getQuantity() > 3 || addition.getQuantity() == null || addition.getQuantity() < 1) {
                     return false;
                 }
             }
