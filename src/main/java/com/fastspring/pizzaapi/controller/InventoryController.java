@@ -8,6 +8,7 @@ import com.fastspring.pizzaapi.model.Inventory;
 import com.fastspring.pizzaapi.service.inventory.InventoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -24,7 +25,7 @@ public class InventoryController {
         this.inventoryService = inventoryService;
     }
 
-
+    @PreAuthorize("hasRole('MANAGER')")
     @PostMapping("/refill")
     public Mono<ResponseEntity<StandardResponse<InventoryResponse>>> refillInventoriesFroProducts(@RequestBody InventoryRequest inventoryRefillRequest) {
         return inventoryService.updateProductsInventory(inventoryRefillRequest.getProducts(), true)
@@ -36,6 +37,7 @@ public class InventoryController {
                         ));
     }
 
+    @PreAuthorize("hasRole('MANAGER')")
     @GetMapping("/query")
     public Mono<ResponseEntity<StandardResponse<InventoryResponse>>> getInventoryForProducts(@RequestParam List<UUID> productIds) {
         return inventoryService.getInventoryForProducts(productIds)

@@ -6,6 +6,7 @@ import com.fastspring.pizzaapi.dto.product.ProductResponseDto;
 import com.fastspring.pizzaapi.service.product.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -15,13 +16,26 @@ import java.util.UUID;
 @RequestMapping("/api/v1/product")
 public class ProductController {
 
+    //TODO add the get all products with inventory and price request
+
     private final ProductService productService;
 
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
 
+//    @PreAuthorize("hasRole('MANAGER')")
+//    @DeleteMapping
+//    public Mono<ResponseEntity<StandardResponse<ProductResponseDto>>> getAllProducts(@RequestParam UUID productId) {
+//        return productService.deleteProduct(productId)
+//                .map(response -> ResponseEntity.status(HttpStatus.ACCEPTED)
+//                        .body(StandardResponse.<ProductResponseDto>builder()
+//                                .message("Product with id: " +productId+ " has been deleted from our records")
+//                                .build()
+//                        ));
+//    }
 
+    @PreAuthorize("hasRole('MANAGER')")
     @PostMapping("/new")
     public Mono<ResponseEntity<StandardResponse<ProductResponseDto>>> addNewProduct(@RequestBody ProductDto productDto) {
         return productService.addNewProduct(productDto)
@@ -33,6 +47,7 @@ public class ProductController {
                         ));
     }
 
+    @PreAuthorize("hasRole('MANAGER')")
     @DeleteMapping
     public Mono<ResponseEntity<StandardResponse<ProductResponseDto>>> deleteProductById(@RequestParam UUID productId) {
         return productService.deleteProduct(productId)

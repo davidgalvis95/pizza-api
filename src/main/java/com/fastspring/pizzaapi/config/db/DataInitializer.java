@@ -1,4 +1,4 @@
-package com.fastspring.pizzaapi.config;
+package com.fastspring.pizzaapi.config.db;
 
 import io.r2dbc.spi.ConnectionFactory;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +16,6 @@ public class DataInitializer {
 
         final ConnectionFactoryInitializer initializer = new ConnectionFactoryInitializer();
         initializer.setConnectionFactory(connectionFactory);
-
         final CompositeDatabasePopulator populator = new CompositeDatabasePopulator();
         populator.addPopulators(new ResourceDatabasePopulator(new ClassPathResource("schema/data.sql")));
         initializer.setDatabasePopulator(populator);

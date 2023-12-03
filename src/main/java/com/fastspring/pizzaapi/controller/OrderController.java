@@ -7,6 +7,7 @@ import com.fastspring.pizzaapi.dto.StandardResponse;
 import com.fastspring.pizzaapi.service.order.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -20,7 +21,7 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/place")
     public Mono<ResponseEntity<StandardResponse<OrderResponse>>> processOrderRequest(@RequestBody OrderRequest orderRequest) {
         return orderService.processOrder(orderRequest)
