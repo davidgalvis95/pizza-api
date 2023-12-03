@@ -35,6 +35,12 @@ public class ExceptionHandlerController {
         return Mono.just(new ResponseEntity<>(buildStandardResponse(ex.getMessage(), null), HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public Mono<ResponseEntity<StandardResponse<?>>> handler(IllegalArgumentException ex) {
+        Arrays.stream(ex.getStackTrace()).forEach(stack -> log.warn(String.valueOf(stack)));
+        return Mono.just(new ResponseEntity<>(buildStandardResponse(ex.getMessage(), null), HttpStatus.BAD_REQUEST));
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public Mono<ResponseEntity<StandardResponse<?>>> handler(RuntimeException ex) {
         Arrays.stream(ex.getStackTrace()).forEach(stack -> log.warn(String.valueOf(stack)));

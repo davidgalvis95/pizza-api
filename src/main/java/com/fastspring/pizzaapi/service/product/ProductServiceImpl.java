@@ -47,7 +47,7 @@ public class ProductServiceImpl implements ProductService {
     public Mono<Void> checkForProductExistence(final List<ProductOrderDto> productList) {
         final List<Mono<Product>> productMonos = productList.stream()
                 .map(productDto -> getProduct(productDto.getId())
-                        .switchIfEmpty(Mono.error(new RuntimeException("Product not found: " + productDto.getId())))
+                        .switchIfEmpty(Mono.error(new IllegalArgumentException("Product not found: " + productDto.getId())))
                         .flatMap(product -> checkIfProductTypeMatchesForProductId(productDto, product)))
                 .collect(Collectors.toList());
 

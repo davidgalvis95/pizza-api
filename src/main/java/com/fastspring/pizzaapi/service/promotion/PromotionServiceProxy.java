@@ -37,6 +37,7 @@ public class PromotionServiceProxy implements PromotionService {
 
     private Mono<Map<Promotion, PromotionService>> getImportantService(UUID promoCode) {
         return promotionRepository.findById(promoCode)
+                .switchIfEmpty(Mono.error(new IllegalArgumentException("No promo code found for id: " + promoCode)))
                 .flatMap(promoCodeInfo -> {
                     if (promoCodeInfo.getActive()) {
                         return Mono.just(Map.of(promoCodeInfo, matchServiceByCodeDescription(promoCodeInfo.getDescriptiveCode(), promoCode)));
