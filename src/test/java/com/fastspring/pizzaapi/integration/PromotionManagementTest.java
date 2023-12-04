@@ -100,7 +100,7 @@ public class PromotionManagementTest {
     }
 
     @Test
-    @Order(29)
+    @Order(30)
     void getAllPromotionsWhenUnauthorizedTest() {
         final Flux<StandardResponse<PromotionResponse>> getAllPromotionsResponse = webTestClient.get()
                 .uri("/api/v1/promotion/all")
@@ -117,7 +117,7 @@ public class PromotionManagementTest {
     }
 
     @Test
-    @Order(29)
+    @Order(31)
     void getAllPromotionsWhenForbiddenTest() {
         final Flux<StandardResponse<PromotionResponse>> getAllPromotionsResponse = webTestClient.get()
                 .uri("/api/v1/promotion/all")
@@ -135,7 +135,7 @@ public class PromotionManagementTest {
     }
 
     @Test
-    @Order(29)
+    @Order(32)
     void deactivatePromotionTest() {
         final UUID _30OffPromoCode = UUID.fromString("11872936-8d27-4ec8-9c6e-229223eeb7ea");
         final Flux<StandardResponse<Promotion>> deactivatePromotionResponse = webTestClient.put()
@@ -155,7 +155,7 @@ public class PromotionManagementTest {
     }
 
     @Test
-    @Order(29)
+    @Order(33)
     void deactivatePromotionWhenUnauthorizedTest() {
         final UUID _30OffPromoCode = UUID.fromString("11872936-8d27-4ec8-9c6e-229223eeb7ea");
         final Flux<StandardResponse<Promotion>> deactivatePromotionResponse = webTestClient.put()
@@ -173,7 +173,7 @@ public class PromotionManagementTest {
     }
 
     @Test
-    @Order(29)
+    @Order(34)
     void deactivatePromotionWhenForbiddenTest() {
         final UUID _30OffPromoCode = UUID.fromString("11872936-8d27-4ec8-9c6e-229223eeb7ea");
         final Flux<StandardResponse<Promotion>> deactivatePromotionResponse = webTestClient.put()
@@ -192,7 +192,7 @@ public class PromotionManagementTest {
     }
 
     @Test
-    @Order(29)
+    @Order(35)
     void activatePromotionTest() {
         final UUID _30OffPromoCode = UUID.fromString("11872936-8d27-4ec8-9c6e-229223eeb7ea");
         final Flux<StandardResponse<Promotion>> deactivatePromotionResponse = webTestClient.put()
@@ -212,7 +212,7 @@ public class PromotionManagementTest {
     }
 
     @Test
-    @Order(29)
+    @Order(36)
     void activatePromotionWhenUnauthorizedTest() {
         final UUID _30OffPromoCode = UUID.fromString("11872936-8d27-4ec8-9c6e-229223eeb7ea");
         final Flux<StandardResponse<Promotion>> activatePromotionResponse = webTestClient.put()
@@ -230,7 +230,7 @@ public class PromotionManagementTest {
     }
 
     @Test
-    @Order(29)
+    @Order(37)
     void activatePromotionWhenForbiddenTest() {
         final UUID _30OffPromoCode = UUID.fromString("11872936-8d27-4ec8-9c6e-229223eeb7ea");
         final Flux<StandardResponse<Promotion>> activatePromotionResponse = webTestClient.put()
