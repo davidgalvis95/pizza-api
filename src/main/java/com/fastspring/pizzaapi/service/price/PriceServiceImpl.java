@@ -65,8 +65,10 @@ public class PriceServiceImpl implements PriceService {
                 .doOnNext(res -> log.info("Additions price total: " + res));
 
         final Mono<Integer> pizzaBasePrice = priceRepository.findPriceByProductId(pizza.getBase().getId())
-                .map(Price::getValue)
+                .collectList()
+                .map(priceList -> priceList.get(0).getValue())
                 .doOnNext(res -> log.info("Base price total: " + res));
+
         final Mono<Integer> cheesePrice = priceRepository.findPriceByProductIdAndPizzaSize(pizza.getCheese().getId(), pizza.getSize())
                 .map(Price::getValue)
                 .doOnNext(res -> log.info("Cheese price total: " + res));

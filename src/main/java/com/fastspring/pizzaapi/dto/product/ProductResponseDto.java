@@ -17,5 +17,5 @@ public class ProductResponseDto {
     private ProductType type;
     private String productName;
     private Map<PizzaSize, Integer> priceBySize;
-    private Integer initialInventory;
+    private Integer inventory;
 }

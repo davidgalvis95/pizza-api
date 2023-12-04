@@ -22,7 +22,7 @@ public interface PriceRepository extends ReactiveCrudRepository<Price, UUID> {
 
     Mono<Price> findPriceByProductIdAndPizzaSize(final UUID productId, final PizzaSize pizzaSize);
 
-    Mono<Price> findPriceByProductId(final UUID productId);
+    Flux<Price> findPriceByProductId(final UUID productId);
 
     Mono<Void> deleteByProductId(final UUID productId);
 }

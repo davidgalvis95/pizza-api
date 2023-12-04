@@ -1,6 +1,7 @@
 package com.fastspring.pizzaapi.controller;
 
 import com.fastspring.pizzaapi.dto.StandardResponse;
+import com.fastspring.pizzaapi.dto.promotion.PromotionResponse;
 import com.fastspring.pizzaapi.model.Promotion;
 import com.fastspring.pizzaapi.service.promotion.PromotionManagementService;
 import org.springframework.http.HttpStatus;
@@ -15,12 +16,21 @@ import java.util.UUID;
 @RequestMapping("/api/v1/promotion")
 public class PromotionController {
 
-    //TODO add the get all promotions request
-
     private final PromotionManagementService promotionManagementService;
 
     public PromotionController(PromotionManagementService promotionManagementService) {
         this.promotionManagementService = promotionManagementService;
+    }
+
+    @PreAuthorize("hasRole('MANAGER')")
+    @GetMapping("/all")
+    public Mono<ResponseEntity<StandardResponse<PromotionResponse>>> getAllPromotions() {
+        return promotionManagementService.getAllPromotions()
+                .map(response -> ResponseEntity.status(HttpStatus.OK)
+                        .body(StandardResponse.<PromotionResponse>builder()
+                                .payload(response)
+                                .build()
+                        ));
     }
 
     @PreAuthorize("hasRole('MANAGER')")

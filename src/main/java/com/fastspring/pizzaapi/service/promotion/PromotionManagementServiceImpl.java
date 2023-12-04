@@ -1,5 +1,6 @@
 package com.fastspring.pizzaapi.service.promotion;
 
+import com.fastspring.pizzaapi.dto.promotion.PromotionResponse;
 import com.fastspring.pizzaapi.model.Promotion;
 import com.fastspring.pizzaapi.repository.PromotionRepository;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,13 @@ public class PromotionManagementServiceImpl implements PromotionManagementServic
                     currentPromotion.setNewRecord(false);
                     return promotionRepository.save(currentPromotion);
                 });
+    }
+
+    @Override
+    public Mono<PromotionResponse> getAllPromotions() {
+        return promotionRepository.findAll()
+                .collectList()
+                .map(PromotionResponse::new);
     }
 
     private Mono<Promotion> getPromotionById(UUID promotionCode) {

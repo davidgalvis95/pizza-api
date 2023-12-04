@@ -3,12 +3,14 @@ package com.fastspring.pizzaapi.service.product;
 import com.fastspring.pizzaapi.dto.order.ProductOrderDto;
 import com.fastspring.pizzaapi.dto.product.ProductDto;
 import com.fastspring.pizzaapi.dto.product.ProductResponseDto;
+import com.fastspring.pizzaapi.dto.product.ProductsResponse;
 import com.fastspring.pizzaapi.model.Product;
 import com.fastspring.pizzaapi.model.enums.ProductType;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface ProductService {
@@ -24,4 +26,6 @@ public interface ProductService {
     Mono<ProductResponseDto> addNewProduct(final ProductDto productDto);
 
     Mono<Void> deleteProduct(final UUID productId);
+
+    Mono<ProductsResponse> getProducts();
 }
