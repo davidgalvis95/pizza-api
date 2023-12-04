@@ -37,6 +37,9 @@ The following diagram shows the modeling of the database, so that it is able to 
 * Create any user by calling the `signup` api in the `AuthController`. Only users with roles of type `USER` or `MANAGER` can be created.
 * Login with that created user by using the `login` api in the `AuthController`; using the same credentials provided on registration, so that one JWT toked is given back to make further requests.
 * Execute any request to the api. All the apis documentation can be found here: http://localhost:9300/webjars/swagger-ui/index.html.
-* There is a postman collection on `src/main/resources/postman/Pizza API.postman_collection.json` so that there's an idea of how do the requests look like.
+* There is a postman collection on `src/main/resources/postman/Pizza API.postman_collection.json` so that there's an idea of how do the requests look like. Please keep in mind that some ids and tokens may not be valid anymore so, please replace them accordingly with the ids found in the creation of the tables and data population in `src/main/resources/schema/data.sql`. 
+This only applies for products and promotions, for users, please follow the authentication flow described above.
+
+
 
 
