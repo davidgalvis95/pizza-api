@@ -11,6 +11,7 @@ Additionally, one customer can add up a valid promotion code to the order, so th
 Regarding inventory, the manager of the business is responsible for filling out inventory, adding up products when needed, and manage the promotions. In order to manage the inventory, there are a set of apis available in `InventoryController` api so that the user can refill inventory when needed and query the inventory for the products so he/she notices of the availability beforehand.
 
 The manager can make use of `ProductController` apis to query for all the products of the business as well as add new products or delete them. To make it clearer every product addition except for bases product types, must include a price for each type of pizza size, it means that it must include an array of price for BIG, MEDIUM, and SMALL pizza, due that it is not the same to add any product for a big pizza than what is for small ones.
+On the other hand due that _base_ type products are not tied to the pizza size, whenever sending a request for creating a new base, the price must be mapped to a `NOT_APPLICABLE` key.
 
 Finally, the manager has available the `PromotionController` api, to activate promotions, deactivate any promotion by its id, or query all the available promotions when needed. All the operations in `PromotionController`, `ProductController` and `InventoryController` can only be performed by managers.
 
