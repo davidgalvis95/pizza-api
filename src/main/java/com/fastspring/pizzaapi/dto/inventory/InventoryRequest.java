@@ -15,6 +15,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @Getter
+@Valid
 public class InventoryRequest {
 
     @NotNull

@@ -12,6 +12,7 @@ import java.util.Map;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Valid
 public class ProductDto {
     @NotNull
     private ProductType type;

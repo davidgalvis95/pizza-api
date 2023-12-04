@@ -37,7 +37,12 @@ public class SecurityConfiguration {
         this.authenticationManager = authenticationManager;
     }
 
-    private static final String[] excludedAuthPages = {"/swagger-ui/**", "/api/v1/user/signup", "/api/v1/user/login"};
+    private static final String[] excludedAuthPages = {
+            "/webjars/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/api/v1/user/signup",
+            "/api/v1/user/login"
+    };
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

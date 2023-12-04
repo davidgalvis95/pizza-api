@@ -14,6 +14,7 @@ import java.util.UUID;
 @Builder
 @Data
 @AllArgsConstructor
+@Valid
 public class OrderRequest {
 
     @NotEmpty

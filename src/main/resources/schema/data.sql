@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS promotion (
 
 CREATE TABLE IF NOT EXISTS users (
     id UUID NOT NULL DEFAULT uuid_generate_v4(),
-    email character varying(255) COLLATE pg_catalog."default",
+    email character varying(255) COLLATE pg_catalog."default" UNIQUE,
     password character varying(255) COLLATE pg_catalog."default",
     CONSTRAINT user_id_pkey PRIMARY KEY (id)
 );
