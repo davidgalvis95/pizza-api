@@ -4,6 +4,7 @@ import com.fastspring.pizzaapi.dto.StandardResponse;
 import com.fastspring.pizzaapi.dto.product.ProductDto;
 import com.fastspring.pizzaapi.dto.product.ProductResponseDto;
 import com.fastspring.pizzaapi.dto.product.ProductsResponse;
+import com.fastspring.pizzaapi.integration.helper.AuthenticationHelper;
 import com.fastspring.pizzaapi.model.Product;
 import com.fastspring.pizzaapi.model.enums.PizzaSize;
 import com.fastspring.pizzaapi.model.enums.ProductType;

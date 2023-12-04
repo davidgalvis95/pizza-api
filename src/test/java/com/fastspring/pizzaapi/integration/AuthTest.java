@@ -3,6 +3,7 @@ package com.fastspring.pizzaapi.integration;
 import com.fastspring.pizzaapi.dto.StandardResponse;
 import com.fastspring.pizzaapi.dto.auth.SignUpResponse;
 import com.fastspring.pizzaapi.dto.auth.SignupRequest;
+import com.fastspring.pizzaapi.integration.helper.AuthenticationHelper;
 import com.fastspring.pizzaapi.model.enums.Role;
 import com.fastspring.pizzaapi.repository.UserRepository;
 import org.junit.jupiter.api.MethodOrderer;

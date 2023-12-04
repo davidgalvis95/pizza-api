@@ -190,7 +190,8 @@ UNION ALL
 SELECT 'cac097db-527e-489d-8a37-3e20b7371c5b'::UUID, FALSE, 'C_10_USD_OFF_PURCHASE_GRATER_THAN_30', '$10 off if the purchase is greater than $30' WHERE NOT EXISTS (SELECT 1 FROM promotion LIMIT 1);
 
 INSERT INTO users (id, email, password)
-SELECT uuid_generate_v4(), 'admin@yopmail.com', '{bcrypt}$2a$10$D8TKYxRy6uOZ6MVw9eLUs.CrvyN52n2kjqJOZ6b7mltDGPJi1rcxC'
+--Admin user password = 'password'
+SELECT uuid_generate_v4(), 'admin@yopmail.com', '{bcrypt}$2a$10$9G2gzSM3BPQqnf0cmZLGWef17BGO8eLR7bc07MPOxr4dJ5aucK/HC'
 WHERE NOT EXISTS (SELECT 1 FROM users);
 
 WITH

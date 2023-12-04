@@ -1,4 +1,4 @@
-package com.fastspring.pizzaapi.integration;
+package com.fastspring.pizzaapi.integration.helper;
 
 import com.fastspring.pizzaapi.dto.StandardResponse;
 import com.fastspring.pizzaapi.dto.auth.LoginRequest;

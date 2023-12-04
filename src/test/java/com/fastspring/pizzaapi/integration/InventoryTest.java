@@ -1,15 +1,11 @@
 package com.fastspring.pizzaapi.integration;
 
 import com.fastspring.pizzaapi.dto.StandardResponse;
-import com.fastspring.pizzaapi.dto.auth.LoginRequest;
-import com.fastspring.pizzaapi.dto.auth.LoginResponse;
-import com.fastspring.pizzaapi.dto.auth.SignUpResponse;
-import com.fastspring.pizzaapi.dto.auth.SignupRequest;
 import com.fastspring.pizzaapi.dto.inventory.InventoryDto;
 import com.fastspring.pizzaapi.dto.inventory.InventoryRequest;
 import com.fastspring.pizzaapi.dto.inventory.InventoryResponse;
 import com.fastspring.pizzaapi.dto.order.ProductOrderDto;
-import com.fastspring.pizzaapi.model.User;
+import com.fastspring.pizzaapi.integration.helper.AuthenticationHelper;
 import com.fastspring.pizzaapi.model.enums.ProductType;
 import com.fastspring.pizzaapi.model.enums.Role;
 import com.fastspring.pizzaapi.repository.UserRepository;
@@ -17,7 +13,6 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;

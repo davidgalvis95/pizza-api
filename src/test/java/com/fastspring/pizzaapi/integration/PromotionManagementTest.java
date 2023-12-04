@@ -2,6 +2,7 @@ package com.fastspring.pizzaapi.integration;
 
 import com.fastspring.pizzaapi.dto.StandardResponse;
 import com.fastspring.pizzaapi.dto.promotion.PromotionResponse;
+import com.fastspring.pizzaapi.integration.helper.AuthenticationHelper;
 import com.fastspring.pizzaapi.model.Promotion;
 import com.fastspring.pizzaapi.model.enums.DescriptiveCode;
 import com.fastspring.pizzaapi.model.enums.Role;
