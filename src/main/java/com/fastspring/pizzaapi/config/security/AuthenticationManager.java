@@ -2,6 +2,7 @@ package com.fastspring.pizzaapi.config.security;
 
 import com.fastspring.pizzaapi.dto.auth.BearerToken;
 import com.fastspring.pizzaapi.service.auth.JwtService;
+import com.fastspring.pizzaapi.service.auth.JwtServiceImpl;
 import com.fastspring.pizzaapi.service.auth.UserDetailsService;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;

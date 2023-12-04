@@ -28,7 +28,7 @@ public class AuthController {
                 .map(response -> ResponseEntity.status(HttpStatus.OK)
                         .body(StandardResponse.<LoginResponse>builder()
                                 .payload(response)
-                                .message("User " +response.getEmail()+ " logged in")
+                                .message("User " + response.getEmail() + " logged in")
                                 .build()
                         ));
     }
@@ -39,19 +39,8 @@ public class AuthController {
                 .map(response -> ResponseEntity.status(HttpStatus.ACCEPTED)
                         .body(StandardResponse.<SignUpResponse>builder()
                                 .payload(response)
-                                .message("User " +response.getEmail()+ " created with id " + response.getUserId())
+                                .message("User " + response.getEmail() + " created with id " + response.getUserId())
                                 .build()
                         ));
     }
-
-//    @GetMapping("/get")
-//    public Mono<ResponseEntity<StandardResponse<SignUpResponse>>> signup(@RequestParam String userEmail) {
-//        return authenticationService.findUserByEmail(signupRequest)
-//                .map(response -> ResponseEntity.status(HttpStatus.ACCEPTED)
-//                        .body(StandardResponse.<SignUpResponse>builder()
-//                                .payload(response)
-//                                .message("User " +response.getEmail()+ " created with id " + response.getUserId())
-//                                .build()
-//                        ));
-//    }
 }

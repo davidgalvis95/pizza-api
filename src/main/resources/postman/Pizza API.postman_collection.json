@@ -1,0 +1,436 @@
+{
+	"info": {
+		"_postman_id": "63590ef5-8f45-46b8-9ae3-7012fd52d94b",
+		"name": "Pizza API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19295993"
+	},
+	"item": [
+		{
+			"name": "promotion",
+			"item": [
+				{
+					"name": "Activate promotion",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsImlhdCI6MTcwMTU0MTgzNSwiZXhwIjoxNzAxNTQzNjM1fQ.bAsIXJcJM6VB9XKyeON_eTXe9GdVnZpsbfJfz_0zvsg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9300/api/v1/promotion/activate?promotionCode=223698ba-b27a-4167-b07a-3bcde44ea60b",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9300",
+							"path": [
+								"api",
+								"v1",
+								"promotion",
+								"activate"
+							],
+							"query": [
+								{
+									"key": "promotionCode",
+									"value": "223698ba-b27a-4167-b07a-3bcde44ea60b"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deactivate promotion",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJhdXRoIjpbIlJPTEVfVVNFUiJdLCJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsImlhdCI6MTcwMTU1NTE4NywiZXhwIjoxNzAxNTU2OTg3fQ.Vu97XQw48d530HvYQFKSRaCnNEd3ZV2sYKdY6NXlKtA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9300/api/v1/promotion/deactivate?promotionCode=223698ba-b27a-4167-b07a-3bcde44ea60b",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9300",
+							"path": [
+								"api",
+								"v1",
+								"promotion",
+								"deactivate"
+							],
+							"query": [
+								{
+									"key": "promotionCode",
+									"value": "223698ba-b27a-4167-b07a-3bcde44ea60b"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all promotions",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJhdXRoIjpbIlJPTEVfTUFOQUdFUiJdLCJzdWIiOiJleGFtcGxlMUBlbWFpbC5jb20iLCJpYXQiOjE3MDE2NTg2NzIsImV4cCI6MTcwMTY2MDQ3Mn0.g-wK8A7IkqTbJG8C_7yhtGJuvfVrqW0C4or9Ut4YrpM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9300/api/v1/promotion/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9300",
+							"path": [
+								"api",
+								"v1",
+								"promotion",
+								"all"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "product",
+			"item": [
+				{
+					"name": "Create product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJhdXRoIjpbIlJPTEVfTUFOQUdFUiJdLCJzdWIiOiJleGFtcGxlMUBlbWFpbC5jb20iLCJpYXQiOjE3MDE2NTg2NzIsImV4cCI6MTcwMTY2MDQ3Mn0.g-wK8A7IkqTbJG8C_7yhtGJuvfVrqW0C4or9Ut4YrpM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"type\": \"ADDITION\",\n  \"productName\": \"Garlic\",\n  \"priceBySize\": {\n    \"SMALL\": 1,\n    \"MEDIUM\": 2,\n    \"BIG\": 3\n  },\n  \"initialInventory\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9300/api/v1/product/new",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9300",
+							"path": [
+								"api",
+								"v1",
+								"product",
+								"new"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all products",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJhdXRoIjpbIlJPTEVfTUFOQUdFUiJdLCJzdWIiOiJleGFtcGxlMUBlbWFpbC5jb20iLCJpYXQiOjE3MDE2NTg2NzIsImV4cCI6MTcwMTY2MDQ3Mn0.g-wK8A7IkqTbJG8C_7yhtGJuvfVrqW0C4or9Ut4YrpM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9300/api/v1/product/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9300",
+							"path": [
+								"api",
+								"v1",
+								"product",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJhdXRoIjpbIlJPTEVfTUFOQUdFUiJdLCJzdWIiOiJleGFtcGxlMUBlbWFpbC5jb20iLCJpYXQiOjE3MDE2NTg2NzIsImV4cCI6MTcwMTY2MDQ3Mn0.g-wK8A7IkqTbJG8C_7yhtGJuvfVrqW0C4or9Ut4YrpM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9300/api/v1/product/remove?productId=455f9056-c81a-4abb-aa4a-b6f493c901f5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9300",
+							"path": [
+								"api",
+								"v1",
+								"product",
+								"remove"
+							],
+							"query": [
+								{
+									"key": "productId",
+									"value": "455f9056-c81a-4abb-aa4a-b6f493c901f5"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "inventory",
+			"item": [
+				{
+					"name": "Query Inventory For Products",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJhdXRoIjpbIlJPTEVfTUFOQUdFUiJdLCJzdWIiOiJleGFtcGxlMUBlbWFpbC5jb20iLCJpYXQiOjE3MDE2NTg2NzIsImV4cCI6MTcwMTY2MDQ3Mn0.g-wK8A7IkqTbJG8C_7yhtGJuvfVrqW0C4or9Ut4YrpM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9300/api/v1/inventory/query?productIds=455f9056-c81a-4abb-aa4a-b6f493c901f5,48328fad-bf0d-4d22-9f27-6bdb1425f697,b3a9937d-3115-48b4-8198-4cb20e670b3b",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9300",
+							"path": [
+								"api",
+								"v1",
+								"inventory",
+								"query"
+							],
+							"query": [
+								{
+									"key": "productIds",
+									"value": "455f9056-c81a-4abb-aa4a-b6f493c901f5,48328fad-bf0d-4d22-9f27-6bdb1425f697,b3a9937d-3115-48b4-8198-4cb20e670b3b"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refill Inventory For Products",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJhdXRoIjpbIlJPTEVfTUFOQUdFUiJdLCJzdWIiOiJleGFtcGxlMUBlbWFpbC5jb20iLCJpYXQiOjE3MDE2NTg2NzIsImV4cCI6MTcwMTY2MDQ3Mn0.g-wK8A7IkqTbJG8C_7yhtGJuvfVrqW0C4or9Ut4YrpM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"products\": [\n        {\n            \"id\": \"b445bff6-ced8-435a-b731-4d309899300b\",\n            \"quantity\": 10,\n            \"productType\": \"ADDITION\"\n        },\n        {\n            \"id\": \"b3a9937d-3115-48b4-8198-4cb20e670b3b\",\n            \"quantity\": 4,\n            \"productType\": \"BASE\"\n        },\n        {\n            \"id\": \"48328fad-bf0d-4d22-9f27-6bdb1425f697\",\n            \"quantity\": 3,\n            \"productType\": \"CHEESE\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9300/api/v1/inventory/refill",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9300",
+							"path": [
+								"api",
+								"v1",
+								"inventory",
+								"refill"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "order",
+			"item": [
+				{
+					"name": "Process Order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJhdXRoIjpbIlJPTEVfTUFOQUdFUiJdLCJzdWIiOiJleGFtcGxlMUBlbWFpbC5jb20iLCJpYXQiOjE3MDE2NTg2NzIsImV4cCI6MTcwMTY2MDQ3Mn0.g-wK8A7IkqTbJG8C_7yhtGJuvfVrqW0C4or9Ut4YrpM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"pizzaRequests\": [\n        {\n            \"products\": [\n                {\n                    \"id\": \"3676fa8d-155b-4396-9af1-a96201364754\", //sicilian\n                    \"quantity\": 1,\n                    \"productType\": \"BASE\"\n                },\n                {\n                    \"id\": \"073acd97-f43c-4a69-9626-30bff095ebab\", //mozarella\n                    \"quantity\": 1,\n                    \"productType\": \"CHEESE\"\n                },\n                {\n                    \"id\": \"39956640-484e-4780-9571-4475e6ff0b0f\", //beef\n                    \"quantity\": 3,\n                    \"productType\": \"ADDITION\"\n                },\n                {\n                    \"id\": \"5d48c0f5-6b78-4b38-b38a-46a87464d6af\", //peperoni\n                    \"quantity\": 2,\n                    \"productType\": \"ADDITION\"\n                }\n            ],\n            \"pizzaSize\": \"BIG\"\n        },\n        {\n            \"products\": [\n                {\n                    \"id\": \"b3a9937d-3115-48b4-8198-4cb20e670b3b\", //neapolitan\n                    \"quantity\": 1,\n                    \"productType\": \"BASE\"\n                },\n                {\n                    \"id\": \"e89f9271-90ec-4211-837b-409c1df784b6\", //parmesan\n                    \"quantity\": 1,\n                    \"productType\": \"CHEESE\"\n                },\n                {\n                    \"id\": \"b445bff6-ced8-435a-b731-4d309899300b\", //tomato\n                    \"quantity\": 2,\n                    \"productType\": \"ADDITION\"\n                },\n                {\n                    \"id\": \"68e54975-eb1e-4e48-aa5b-39c8cb92ca45\", //chorizo\n                    \"quantity\": 3,\n                    \"productType\": \"ADDITION\"\n                }\n            ],\n            \"pizzaSize\": \"MEDIUM\"\n        }\n    ],\n    \"promoCode\": \"223698ba-b27a-4167-b07a-3bcde44ea60b\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9300/api/v1/order/place",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9300",
+							"path": [
+								"api",
+								"v1",
+								"order",
+								"place"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"example@email.com\",\n  \"password\": \"password123\",\n  \"roles\": [\"USER\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9300/api/v1/user/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9300",
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"example@email.com\",\n  \"password\": \"password123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9300/api/v1/user/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9300",
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
