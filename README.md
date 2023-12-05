@@ -68,8 +68,8 @@ The orderDb contains an order collection that is following the next structure fo
 ### How to use
 * Download the api by running this command in the terminal `git clone https://github.com/davidgalvis95/pizza-api`.
 * Stand over the root folder of the project - pizza-api - and run `docker-compose up` to start up the pizza api and order databases.
-* To connect to the database using some client: The credentials are: `postgres / password` and the database name is `pizza_api_db`.
-* Run `mvn clean install`.
+* To get connected to the postgres pizza_api database using some client: The credentials are: `postgres / password` and the database name is `pizza_api_db`.
+* To get connected to the order database using mongo express client go to http://localhost:8081/db/ordersDb then enter the credentials: `admin/pass`, then the database will show up.
 * Run the following command `mvn spring-boot:run` to run the api.
 * Create any user by calling the `signup` api in the `AuthController`. Only users with roles of type `USER` or `MANAGER` can be created.
 * Login with that created user by using the `login` api in the `AuthController`; using the same credentials provided on registration, so that one JWT toked is given back to make further requests.
