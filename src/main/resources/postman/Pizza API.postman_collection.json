@@ -330,7 +330,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJhdXRoIjpbIlJPTEVfTUFOQUdFUiJdLCJzdWIiOiJleGFtcGxlMUBlbWFpbC5jb20iLCJpYXQiOjE3MDE2NTg2NzIsImV4cCI6MTcwMTY2MDQ3Mn0.g-wK8A7IkqTbJG8C_7yhtGJuvfVrqW0C4or9Ut4YrpM",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJhdXRoIjpbIlJPTEVfVVNFUiJdLCJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsImlhdCI6MTcwMTc1NjIxNiwiZXhwIjoxNzAxNzU4MDE2fQ.TDDLJGhLTNTJ1ft1Y_FC2EzZvXP-xvFY_kOhtdstDHc",
 									"type": "string"
 								}
 							]
@@ -339,7 +339,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"pizzaRequests\": [\n        {\n            \"products\": [\n                {\n                    \"id\": \"3676fa8d-155b-4396-9af1-a96201364754\", //sicilian\n                    \"quantity\": 1,\n                    \"productType\": \"BASE\"\n                },\n                {\n                    \"id\": \"073acd97-f43c-4a69-9626-30bff095ebab\", //mozarella\n                    \"quantity\": 1,\n                    \"productType\": \"CHEESE\"\n                },\n                {\n                    \"id\": \"39956640-484e-4780-9571-4475e6ff0b0f\", //beef\n                    \"quantity\": 3,\n                    \"productType\": \"ADDITION\"\n                },\n                {\n                    \"id\": \"5d48c0f5-6b78-4b38-b38a-46a87464d6af\", //peperoni\n                    \"quantity\": 2,\n                    \"productType\": \"ADDITION\"\n                }\n            ],\n            \"pizzaSize\": \"BIG\"\n        },\n        {\n            \"products\": [\n                {\n                    \"id\": \"b3a9937d-3115-48b4-8198-4cb20e670b3b\", //neapolitan\n                    \"quantity\": 1,\n                    \"productType\": \"BASE\"\n                },\n                {\n                    \"id\": \"e89f9271-90ec-4211-837b-409c1df784b6\", //parmesan\n                    \"quantity\": 1,\n                    \"productType\": \"CHEESE\"\n                },\n                {\n                    \"id\": \"b445bff6-ced8-435a-b731-4d309899300b\", //tomato\n                    \"quantity\": 2,\n                    \"productType\": \"ADDITION\"\n                },\n                {\n                    \"id\": \"68e54975-eb1e-4e48-aa5b-39c8cb92ca45\", //chorizo\n                    \"quantity\": 3,\n                    \"productType\": \"ADDITION\"\n                }\n            ],\n            \"pizzaSize\": \"MEDIUM\"\n        }\n    ],\n    \"promoCode\": \"223698ba-b27a-4167-b07a-3bcde44ea60b\"\n}",
+							"raw": "{\n    \"pizzaRequests\": [\n        {\n            \"products\": [\n                {\n                    \"id\": \"47f85d00-98c4-4a08-b4c6-eeb8bc301a91\", //sicilian\n                    \"quantity\": 1,\n                    \"productType\": \"BASE\"\n                },\n                {\n                    \"id\": \"be89e36d-5701-477c-9158-91e9ce0d8768\", //mozarella\n                    \"quantity\": 1,\n                    \"productType\": \"CHEESE\"\n                },\n                {\n                    \"id\": \"46166f8c-8d3f-46b7-858b-5ffdea957669\", //beef\n                    \"quantity\": 3,\n                    \"productType\": \"ADDITION\"\n                },\n                {\n                    \"id\": \"845f4e12-1471-4087-8f63-181730df1de6\", //peperoni\n                    \"quantity\": 2,\n                    \"productType\": \"ADDITION\"\n                }\n            ],\n            \"pizzaSize\": \"BIG\"\n        },\n        {\n            \"products\": [\n                {\n                    \"id\": \"0104adaf-10da-472c-8661-a84991be9caf\", //neapolitan\n                    \"quantity\": 1,\n                    \"productType\": \"BASE\"\n                },\n                {\n                    \"id\": \"41227ebf-e387-471d-a5c1-a6a74d335312\", //parmesan\n                    \"quantity\": 1,\n                    \"productType\": \"CHEESE\"\n                },\n                {\n                    \"id\": \"2ebf2247-8cac-4fbd-9cef-3af65e7e126e\", //tomato\n                    \"quantity\": 2,\n                    \"productType\": \"ADDITION\"\n                },\n                {\n                    \"id\": \"ba8d54f6-4226-40d0-948f-42dcaf282384\", //chorizo\n                    \"quantity\": 3,\n                    \"productType\": \"ADDITION\"\n                }\n            ],\n            \"pizzaSize\": \"MEDIUM\"\n        }\n    ],\n    \"promoCode\": \"11872936-8d27-4ec8-9c6e-229223eeb7ea\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -358,6 +358,71 @@
 								"v1",
 								"order",
 								"place"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Orders",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJhdXRoIjpbIlJPTEVfTUFOQUdFUiJdLCJzdWIiOiJleGFtcGxlMUBlbWFpbC5jb20iLCJpYXQiOjE3MDE3NDg3MDYsImV4cCI6MTcwMTc1MDUwNn0.iuE9-SBHY9dKVMwXpgJyhDZekIAdhv7FB5LDguShqAU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9300/api/v1/order/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9300",
+							"path": [
+								"api",
+								"v1",
+								"order",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Orders",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJhdXRoIjpbIlJPTEVfVVNFUiJdLCJzdWIiOiJleGFtcGxlQGVtYWlsLmNvbSIsImlhdCI6MTcwMTc0NjQ1NiwiZXhwIjoxNzAxNzQ4MjU2fQ.YdNEQtCxFH_oBpRfUSWlXSxY9zu0-lm8WgaRgAIcmu8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9300/api/v1/order/user/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9300",
+							"path": [
+								"api",
+								"v1",
+								"order",
+								"user",
+								"all"
 							]
 						}
 					},
@@ -406,7 +471,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"email\": \"example@email.com\",\n  \"password\": \"password123\"\n}",
+							"raw": "{\n  \"email\": \"example@email.com\",\n  \"password\": \"password\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
