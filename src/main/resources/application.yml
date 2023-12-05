@@ -4,6 +4,14 @@ spring:
     url: r2dbc:postgresql://localhost:5432/pizza_api_db
     username: postgres
     password: password
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: ordersDb
+      username: pizzauser
+      password: password
+      authentication-database: admin
 
 server:
   port: 9300

@@ -5,9 +5,13 @@ import com.fastspring.pizzaapi.dto.order.OrderResponse;
 import com.fastspring.pizzaapi.dto.order.PizzaOrderRequest;
 import com.fastspring.pizzaapi.dto.order.ProductOrderDto;
 import com.fastspring.pizzaapi.dto.product.*;
+import com.fastspring.pizzaapi.model.Order;
 import com.fastspring.pizzaapi.model.Product;
+import com.fastspring.pizzaapi.model.User;
 import com.fastspring.pizzaapi.model.enums.PizzaSize;
 import com.fastspring.pizzaapi.model.enums.ProductType;
+import com.fastspring.pizzaapi.repository.OrderRepository;
+import com.fastspring.pizzaapi.repository.UserRepository;
 import com.fastspring.pizzaapi.service.inventory.InventoryService;
 import com.fastspring.pizzaapi.service.prevalidation.AdditionValidationService;
 import com.fastspring.pizzaapi.service.prevalidation.NotAdditionValidationService;
@@ -16,7 +20,11 @@ import com.fastspring.pizzaapi.service.price.PriceService;
 import com.fastspring.pizzaapi.service.product.ProductService;
 import com.fastspring.pizzaapi.service.promotion.PromotionService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.*;
@@ -33,17 +41,25 @@ public class OrderServiceImpl implements OrderService {
 
     private final PromotionService promotionService;
 
+    private final UserRepository userRepository;
+
+    private final OrderRepository orderRepository;
+
     private final Map<ProductType, OrderPreValidationService> validationServices;
 
 
     public OrderServiceImpl(final InventoryService inventoryService,
                             final ProductService productService,
                             final PriceService priceService,
-                            final PromotionService promotionService) {
+                            final PromotionService promotionService,
+                            final UserRepository userRepository,
+                            final OrderRepository orderRepository) {
         this.inventoryService = inventoryService;
         this.productService = productService;
         this.priceService = priceService;
         this.promotionService = promotionService;
+        this.userRepository = userRepository;
+        this.orderRepository = orderRepository;
         this.validationServices = Map.of(
                 ProductType.ADDITION, new AdditionValidationService(),
                 ProductType.BASE, new NotAdditionValidationService(),
@@ -51,6 +67,8 @@ public class OrderServiceImpl implements OrderService {
         );
     }
 
+    @Override
+    @Transactional
     public Mono<OrderResponse> processOrder(final OrderRequest orderRequest) {
         final List<ProductOrderDto> products = pizzaRequestsToListOfAggregatedProducts(orderRequest.getPizzaRequests());
 
@@ -65,7 +83,62 @@ public class OrderServiceImpl implements OrderService {
                         .map(OrderResponse.OrderResponseBuilder::build))
                 .flatMap(order -> inventoryService.updateProductsInventory(products, false)
                         .collectList()
-                        .map(response -> order));
+                        .map(response -> order))
+                .flatMap(this::saveOrderResponse);
+    }
+
+    @Override
+    public Flux<OrderResponse> getOrdersForUser() {
+        return Flux.just(getUserIdFromAuthContext())
+                .flatMap(userId -> userId)
+                .flatMap(this::getOrderByUserId);
+    }
+
+    @Override
+    public Flux<OrderResponse> getOrders(final UUID userId) {
+        return Flux.just(Optional.ofNullable(userId))
+                .flatMap(optionalUserId -> optionalUserId.map(this::getOrderByUserId)
+                        .orElseGet(this::findAllOrders)
+                );
+    }
+
+    private Flux<OrderResponse> getOrderByUserId(UUID userId) {
+        return orderRepository.findAllByUserId(userId)
+                .map(order -> OrderResponse.builder()
+                        .orderId(order.getOrderId())
+                        .priceWithoutPromotion(order.getPriceWithoutPromotion())
+                        .priceWithPromotion(order.getPriceWithPromotion())
+                        .promoCode(order.getPromoCode())
+                        .promoCodeDescription(order.getPromoCodeDescription())
+                        .pizzas(order.getPizzas())
+                        .build()
+                );
+    }
+
+    private Flux<OrderResponse> findAllOrders() {
+        return orderRepository.findAll()
+                .map(order -> OrderResponse.builder()
+                        .orderId(order.getOrderId())
+                        .priceWithoutPromotion(order.getPriceWithoutPromotion())
+                        .priceWithPromotion(order.getPriceWithPromotion())
+                        .promoCode(order.getPromoCode())
+                        .promoCodeDescription(order.getPromoCodeDescription())
+                        .pizzas(order.getPizzas())
+                        .build());
+    }
+
+    private Mono<OrderResponse> saveOrderResponse(final OrderResponse orderResponse) {
+        return getUserIdFromAuthContext()
+                .flatMap(userId -> orderRepository.save(Order.builder()
+                        .orderId(orderResponse.getOrderId())
+                        .userId(userId)
+                        .priceWithoutPromotion(orderResponse.getPriceWithoutPromotion())
+                        .priceWithPromotion(orderResponse.getPriceWithPromotion())
+                        .promoCode(orderResponse.getPromoCode())
+                        .promoCodeDescription(orderResponse.getPromoCodeDescription())
+                        .pizzas(orderResponse.getPizzas())
+                        .build()))
+                .map(response -> orderResponse);
     }
 
     private Mono<Void> preValidatePizzaRequests(final List<PizzaOrderRequest> pizzaOrderRequests) {
@@ -91,6 +164,7 @@ public class OrderServiceImpl implements OrderService {
     private OrderResponse.OrderResponseBuilder initializeOrderResponse(final OrderRequest orderRequest,
                                                                        final List<Product> productsList) {
         return OrderResponse.builder()
+                .orderId(UUID.randomUUID())
                 .pizzas(pizzaRequestsIntoListOfPizzas(orderRequest.getPizzaRequests(), productsList));
     }
 
@@ -163,7 +237,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private Integer calculateQuantityBasedOnPizzaSize(PizzaSize pizzaSize, final Integer baseQ, final ProductType productType) {
-        if(productType.equals(ProductType.BASE)) {
+        if (productType.equals(ProductType.BASE)) {
             pizzaSize = PizzaSize.NOT_APPLICABLE;
         }
 
@@ -173,5 +247,15 @@ public class OrderServiceImpl implements OrderService {
             case BIG -> baseQ * 3;
             default -> throw new IllegalStateException("Unexpected value for pizza size: " + pizzaSize);
         };
+    }
+
+    private Mono<UUID> getUserIdFromAuthContext() {
+        return ReactiveSecurityContextHolder.getContext()
+                .map(SecurityContext::getAuthentication)
+                .map(auth -> (String) auth.getPrincipal())
+                .flatMap(email -> userRepository.findByEmail(email)
+                        .switchIfEmpty(Mono.error(new IllegalArgumentException("User with email " + email + " does not exist")))
+                        .map(User::getId)
+                );
     }
 }

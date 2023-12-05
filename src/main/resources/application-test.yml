@@ -2,3 +2,12 @@ spring:
   r2dbc:
     #The user and password are both 'test'
     url: r2dbc:tc:postgresql:///pizza_test_db?TC_IMAGE_TAG=latest
+  data:
+    mongodb:
+      test:
+      host: localhost
+      port: 27018
+      database: ordersDb
+      username: pizzauser
+      password: password
+      authentication-database: admin
